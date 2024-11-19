@@ -1,2 +1,2 @@
 # rs_introduction
-This is a repository for rs introduction between and lw.
+This is a repository for rs introduction between cjm and lw.
