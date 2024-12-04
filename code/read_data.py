@@ -31,10 +31,9 @@ def read_click_item_time(path_train, path_test, offline=True):
         tst_click = pd.read_csv(path_test)
 
         all_click = trn_click.append(tst_click)
-
+    all_click = all_click.sort_values('click_timestamp')
     df_click = all_click.drop_duplicates((['user_id', 'click_article_id', 'click_timestamp']))
 
-    df_click = df_click.sort_values('click_timestamp')
     df_click['item_time_list'] = list(zip(df_click["click_article_id"], df_click["click_timestamp"]))
     df_click = df_click.groupby('user_id')['item_time_list'].apply(list).reset_index()
     dict_user_item_time = dict()

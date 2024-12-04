@@ -55,7 +55,7 @@ def itemcf_recommendation(train_path, test_path, user_clik_group_path, sim_matri
         for item1, time in item_time_list:
             item1 = str(item1)
             if item1 in sim_matrix:
-                for item2, sim in sorted(sim_matrix[item1].items(), key=lambda x: x[1], reverse=True)[:10]:
+                for item2, sim in sorted(sim_matrix[item1].items(), key=lambda x: x[1], reverse=True)[:30]:
                     if item2 not in [i for i, j in item_time_list]:
                         if item2 not in list_sim_item:
                             list_sim.setdefault(item2,0)
@@ -63,7 +63,7 @@ def itemcf_recommendation(train_path, test_path, user_clik_group_path, sim_matri
                             list_sim[item2] += sim
         # print(list_sim_item)
         count_hot = 0
-        while len(list_sim) < 10:
+        while len(list_sim) < 30:
             if str(hot_top[count_hot]) not in list_sim_item and str(hot_top[count_hot]) not in [i for i, j in item_time_list]:
                 list_sim[str(hot_top[count_hot])] = -100 - count_hot
                 list_sim_item.append(str(hot_top[count_hot]))
