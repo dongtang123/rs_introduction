@@ -1,14 +1,10 @@
 import os
 import math
 import json
-import pickle
-import torch
-import torch.nn.functional as F
 from tqdm import tqdm
 import pandas as pd
 from collections import defaultdict
-
-from read_data import get_top_click_nums
+from get_feature.read_data import get_top_click_nums
 
 
 def get_item_sim_matrix_cf(user_click_group_dict_path):
@@ -30,7 +26,7 @@ def get_item_sim_matrix_cf(user_click_group_dict_path):
     for item1, sim_to_item1 in dict_combine_like.items():
         for item2, weight in sim_to_item1.items():
             dict_sim_matrix[item1][item2] = weight / math.sqrt(dict_like_num[item1] * dict_like_num[item2])
-    with open("../rs_introduction_data/itemcf_sim_matrix.json", 'w') as f:
+    with open("../../rs_introduction_data/itemcf_sim_matrix.json", 'w') as f:
         json.dump(dict_sim_matrix, f, ensure_ascii=False, indent=4)
     print("Similarity has computed!")
     return dict_sim_matrix
@@ -72,7 +68,7 @@ def itemcf_recommendation(train_path, test_path, user_clik_group_path, sim_matri
         # print(list_sim)
         recall_res[user_id] = list_sim
 
-    with open("../rs_introduction_data/result.json", 'w') as f:
+    with open("../../rs_introduction_data/result.json", 'w') as f:
         json.dump(recall_res, f, ensure_ascii=False, indent=4)
     recall_res = change_to_submit(recall_res)
     recall_res.to_csv("../rs_introduction_data/result.csv", index=False)
@@ -105,12 +101,12 @@ def if_duplicates(df):
 
 
 if __name__ == "__main__":
-    original_feature_path = os.path.join("../rs_introduction_data/articles_emb.csv")
-    user_click_group_dict_path = os.path.join("../rs_introduction_data/user_click_group.json")
-    train_click_path = os.path.join("../rs_introduction_data/train_click_log.csv")
-    test_click_path = os.path.join("../rs_introduction_data/testA_click_log.csv")
-    # get_item_sim_matrix_cf(user_click_group_dict_path)
-    sim_matrix_path = os.path.join("../rs_introduction_data/itemcf_sim_matrix.json")
-    itemcf_recommendation(train_click_path, test_click_path, user_click_group_dict_path, sim_matrix_path, 5)
-    res = pd.read_csv(os.path.join("../rs_introduction_data/result.csv"))
+    original_feature_path = os.path.join("../../rs_introduction_data/articles_emb.csv")
+    user_click_group_dict_path = os.path.join("../../rs_introduction_data/user_click_group.json")
+    train_click_path = os.path.join("../../rs_introduction_data/train_click_log.csv")
+    test_click_path = os.path.join("../../rs_introduction_data/testA_click_log.csv")
+    get_item_sim_matrix_cf(user_click_group_dict_path)
+    sim_matrix_path = os.path.join("../../rs_introduction_data/itemcf_sim_matrix.json")
+    # itemcf_recommendation(train_click_path, test_click_path, user_click_group_dict_path, sim_matrix_path, 5)
+    res = pd.read_csv(os.path.join("../../rs_introduction_data/result.csv"))
     if_duplicates(res)
